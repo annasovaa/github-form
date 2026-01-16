@@ -1,7 +1,14 @@
 const form = document.getElementById('taskForm');
+const submitBtn = document.getElementById('submitBtn');
 
-form.addEventListener('submit', e => {
+form.addEventListener('submit', function (e) {
   e.preventDefault();
+
+  // защита от повторной отправки
+  if (submitBtn.disabled) return;
+
+  submitBtn.disabled = true;
+  submitBtn.innerText = 'Отправка...';
 
   const data = Object.fromEntries(new FormData(form));
 
@@ -10,13 +17,16 @@ form.addEventListener('submit', e => {
     {
       method: 'POST',
       mode: 'no-cors',
-      headers: {
-        'Content-Type': 'application/json'
-      },
       body: JSON.stringify(data)
     }
   );
 
   alert('Данные отправлены');
   form.reset();
+
+  // возвращаем кнопку через 3 сек
+  setTimeout(() => {
+    submitBtn.disabled = false;
+    submitBtn.innerText = 'Отправить';
+  }, 3000);
 });
